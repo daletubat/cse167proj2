@@ -37,6 +37,17 @@ public:
 	float tranZ;
 	float scale;
 	float orbit;
+	float minX;
+	float maxX;
+	float minY;
+	float maxY;
+	float minZ;
+	float maxZ;
+	float avX;
+	float avY;
+	float avZ;
+	float big;
+
 	void update();
 	void spin(float deg);
 	bool clk;
@@ -48,6 +59,7 @@ public:
 	void translatez(int d);
 	void reset();
 
+	static float maxAxis(float x, float y, float z);
 
 	std::vector<glm::vec3> getVert();
 	std::vector<glm::vec3> getNorm();

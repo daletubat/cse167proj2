@@ -11,6 +11,9 @@ OBJObject::OBJObject(const char *filepath)
 	tranZ = 0;
 	scale = 1;
 	orbit = 0;
+	minX, minY, minZ = std::numeric_limits<float>::infinity();; 
+	maxX, maxY, maxZ = 0;
+	big = 0;
 	clk = true;
 }
 
@@ -20,19 +23,16 @@ void OBJObject::parse(const char *filepath)
 	float x, y, z;  // vertex coordinates
 	float r, g, b;  // vertex color
 	int c1, c2;    // characters read from file
-	float t; //trash
+	//float t; //trash
 
 	fp = fopen(filepath, "rb");  // make the file name configurable so you can load other files
 	if (fp == NULL) { std::cerr << "error loading file" << std::endl; exit(-1); }  // just in case the file can't be found or is corrupt
 
-	//TODO: does not correctly parse the bear and the dragon objects, "does not handle the v line corrently"
 	while (1) {
 		c1 = fgetc(fp);
 		if (c1 == EOF) {
 			break;
-		}
-
-		
+		}		
 		//vertices
 		if (c1 == 'v') {
 			c2 = fgetc(fp);
@@ -40,11 +40,20 @@ void OBJObject::parse(const char *filepath)
 				fscanf(fp, "%f %f %f %f %f %f", &x, &y, &z, &r, &g, &b);
 				glm::vec3 v2Add = glm::vec3(x, y, z); //create vector out of points
 				vertices.push_back(v2Add); //push vector onto vertices
+
+				//finding max, min
+				
+				if (x < minX) { minX = x; }
+				if (y < minY) { minY = y; }
+				if (z < minZ) { minZ = z; }
+				if (x > maxX) { maxX = x; }
+				if (y > maxY) { maxY = y; }
+				if (z > maxZ) { maxZ = z; }
+			
 			}
 			else if (c2 == 'n') {
 				//vertex normals
-				//else if ((c1 == 'v') && (c2 == 'n'))
-				//{
+
 				fscanf(fp, "%f %f %f", &x, &y, &z);
 				glm::vec3 vn2Add = glm::vec3(x, y, z);
 				normals.push_back(vn2Add);
@@ -52,20 +61,25 @@ void OBJObject::parse(const char *filepath)
 		}
 
 		//faces
-		else  if (c1 == 'f'){ //&& //(c2 == ' ')) {
+		else  if (c1 == 'f'){ 
 			c2 = fgetc(fp);
 			if (c2 == ' ') {
 				//WARNING: Indexing obj files begins at 1
 				//not sure what that means though
 				fscanf(fp, "%f//%f %f//%f %f//%f", &x, &r, &y, &g, &z, &b);
-				std::cout << "x : " << x << " y : " << y << " z: " << z << std::endl;
+				//std::cout << "x : " << x << " y : " << y << " z: " << z << std::endl;
 				glm::vec3 ind2Add = glm::vec3(x, y, z);
 				indices.push_back(ind2Add);
 
 			}
 		}
 	}
-
+	std::cout << "MaxX: " << maxX << " MaxY: " << maxY << " MaxZ: " << maxZ << std::endl << "minX: " << minX << " minY: " << minY << " minZ: " << minZ << std::endl;
+	avX = (maxX - minX) / 2;
+	avY = (maxY - minY) / 2;
+	avZ = (maxZ - minZ) / 2;
+	big = maxAxis( avX, avY, avZ ); //need to know which axis is the biggest?
+	//std::cout << "max axis is of size: " << big << std::endl;
 	fclose(fp);
 }
 
@@ -159,4 +173,12 @@ std::vector<glm::vec3> OBJObject::getVert() {
 }
 std::vector<glm::vec3> OBJObject::getNorm() {
 	return this->normals;
+}
+
+float maxAxis(float x, float y, float z) {
+	//float axis = x;
+	//if (axis < y) { axis = y; }
+	//if (axis < z) { axis = z; }
+	
+	return x;
 }
