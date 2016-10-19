@@ -23,6 +23,7 @@ void OBJObject::parse(const char *filepath)
 	float x, y, z;  // vertex coordinates
 	float r, g, b;  // vertex color
 	int c1, c2;    // characters read from file
+	unsigned int i1, i2, i3; //unsigned ints for the indices for faces
 	//float t; //trash
 
 	fp = fopen(filepath, "rb");  // make the file name configurable so you can load other files
@@ -41,8 +42,7 @@ void OBJObject::parse(const char *filepath)
 				glm::vec3 v2Add = glm::vec3(x, y, z); //create vector out of points
 				vertices.push_back(v2Add); //push vector onto vertices
 
-				//finding max, min
-				
+				//finding max, min of x, y, and z
 				if (x < minX) { minX = x; }
 				if (y < minY) { minY = y; }
 				if (z < minZ) { minZ = z; }
@@ -66,10 +66,12 @@ void OBJObject::parse(const char *filepath)
 			if (c2 == ' ') {
 				//WARNING: Indexing obj files begins at 1
 				//not sure what that means though
-				fscanf(fp, "%f//%f %f//%f %f//%f", &x, &r, &y, &g, &z, &b);
+				fscanf(fp, "%i//%i %i//%i %i//%i", &i1, &i1, &i2, &i2, &i3, &i3);
 				//std::cout << "x : " << x << " y : " << y << " z: " << z << std::endl;
-				glm::vec3 ind2Add = glm::vec3(x, y, z);
-				indices.push_back(ind2Add);
+				//glm::vec3 ind2Add = glm::vec3(x, y, z);
+				ind.push_back(i1);
+				ind.push_back(i2);
+				ind.push_back(i3);
 
 			}
 		}
@@ -81,6 +83,14 @@ void OBJObject::parse(const char *filepath)
 	big = maxAxis( avX, avY, avZ ); //need to know which axis is the biggest?
 	//std::cout << "max axis is of size: " << big << std::endl;
 	fclose(fp);
+
+	//Indexing all of the data
+	for (unsigned int g = 0; g < ind.size(); g++) {
+		unsigned int vertIndex = ind[g];
+		glm::vec3 snerp = vertices[vertIndex - 1];
+		ind_verts.push_back(snerp);
+	}
+
 }
 
 void OBJObject::draw() 
@@ -182,3 +192,9 @@ float maxAxis(float x, float y, float z) {
 	
 	return x;
 }
+
+
+//things done:
+//Indexed data so the off by one thing doesn't ruin our shit
+//added face parsing
+//calculated center of the object (kinda)

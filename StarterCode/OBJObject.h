@@ -21,7 +21,8 @@ private:
 
 
 public:
-	std::vector<glm::vec3> indices;
+	std::vector<glm::vec3> ind_verts;
+	std::vector<unsigned int> ind;
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
 	OBJObject(const char* filepath);
