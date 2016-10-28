@@ -16,6 +16,11 @@ void setup_callbacks()
 	glfwSetKeyCallback(window, Window::key_callback);
 	// Set the window resize callback
 	glfwSetFramebufferSizeCallback(window, Window::resize_callback);
+	glfwSetScrollCallback(window, Window::scroll_callback);
+	glfwSetMouseButtonCallback(window, Window::mouse_button_callback);
+	glfwSetCursorPosCallback(window, Window::cursor_pos_callback);
+
+
 }
 
 void setup_glew()
@@ -49,7 +54,8 @@ void setup_opengl_settings()
 	// Disable backface culling to render both sides of polygons
 	glDisable(GL_CULL_FACE);
 	// Set clear color
-	glClearColor(0.05f, 0.8f, 0.85f, 1.0f);
+	//glClearColor(1.05f, 0.8f, 0.85f, 1.0f); //pink
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);////SETS THE BACKGROUND COLOR
 }
 
 void print_versions()

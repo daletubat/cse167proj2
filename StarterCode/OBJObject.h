@@ -26,9 +26,10 @@ public:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
 	OBJObject(const char* filepath);
+	~OBJObject();
 
 	void parse(const char* filepath);
-	void draw();
+	void draw(GLuint);
 
 	glm::mat4 toWorld;
 	float size;
@@ -38,6 +39,21 @@ public:
 	float tranZ;
 	float scale;
 	float orbit;
+
+
+	////
+	float xPos = 0.0f;
+	float yPos = 0.0f;
+	float zPos = 0.0f;
+	glm::vec3 translate;
+	void OBJObject::trans();
+	glm::vec3 cpt;
+	glm::vec3 ppt;
+	int type = 1;
+	int mode = 0;
+
+
+	//for finding the center point
 	float minX;
 	float maxX;
 	float minY;
@@ -48,6 +64,20 @@ public:
 	float avY;
 	float avZ;
 	float big;
+	int bigAx;
+
+	//for shaders
+	GLuint VAO, VBO, EBO, NBO;
+	GLuint uProjection, uModelview;
+	glm::mat3 material;
+
+	//for lighting
+	glm::vec3 dirLightDir;
+	glm::vec3 ptLightDir;
+	glm::vec3 sptLightPos;
+	bool camCtl;
+	float sptLightOut;
+	float sptLightIn;
 
 	void update();
 	void spin(float deg);
@@ -59,8 +89,6 @@ public:
 	void translatey(int d);
 	void translatez(int d);
 	void reset();
-
-	static float maxAxis(float x, float y, float z);
 
 	std::vector<glm::vec3> getVert();
 	std::vector<glm::vec3> getNorm();

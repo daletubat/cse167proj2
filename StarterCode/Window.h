@@ -12,6 +12,7 @@
 #include <GLFW/glfw3.h>
 #include "Cube.h"
 #include "shader.h"
+#include "glm/gtx/rotate_vector.hpp"
 
 class Window
 {
@@ -27,6 +28,15 @@ public:
 	static void idle_callback();
 	static void display_callback(GLFWwindow*);
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void scroll_callback(GLFWwindow* window, double x_off, double y_off);
+	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+	static void cursor_pos_callback(GLFWwindow* window, double xPos, double yPos);
+	static glm::vec3 trackBallMapping(glm::vec3 mapIn);
+
+	glm::vec3 prev;
+	glm::vec3 curr;
+
+
 };
 
 #endif
